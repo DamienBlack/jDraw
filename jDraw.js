@@ -1,5 +1,4 @@
 $.fn.drawCircle = function(settings) {
-
     settings = $.extend({
         color: 'grey',
         stroke: 'transparent',
@@ -37,3 +36,13 @@ $.fn.clearCanvas = function(newWidth, newHeight) {
         this.height = height;
     })
 };
+
+$.fn.hasPixel = function(x, y) {
+    var context = this[0].getContext('2d');
+    var pixel = data = context.getImageData(x, y, 1, 1).data;
+    if (pixel[3] == 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
