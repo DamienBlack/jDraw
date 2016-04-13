@@ -22,6 +22,28 @@ $.fn.drawCircle = function(settings) {
     });
 };
 
+$.fn.drawRectangle = function(settings) {
+    settings = $.extend({
+        color: 'grey',
+        stroke: 'transparent',
+        width: 10,
+        height: 10,
+        position: [0,0]
+    }, settings);
+
+    console.log(settings.width, settings.height);
+
+    this.each(function() {
+        var context = this.getContext('2d');
+        context.fillStyle = settings.color;
+        context.strokeStyle = settings.stroke;
+        context.lineWidth = settings.strokeWeight;
+        context.rect(settings.position[0], settings.position[1], settings.width, settings.height);
+        context.fill()
+        context.stroke()
+    })
+};
+
 $.fn.clearCanvas = function(newWidth, newHeight) {
     this.each(function() {
         var width = this.width;
@@ -39,7 +61,7 @@ $.fn.clearCanvas = function(newWidth, newHeight) {
 
 $.fn.hasPixel = function(x, y) {
     var context = this[0].getContext('2d');
-    var pixel = data = context.getImageData(x, y, 1, 1).data;
+    var pixel = context.getImageData(x, y, 1, 1).data;
     if (pixel[3] == 0) {
         return false;
     } else {
