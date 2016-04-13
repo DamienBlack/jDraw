@@ -22,7 +22,7 @@ $.fn.drawCircle = function(settings) {
     });
 };
 
-$.fn.clearCanvas = function(newWidth, newHeight) {
+$.fn.clearCanvas = function(newWidth, newHeight, rotation) {
     this.each(function() {
         var width = this.width;
         if (newWidth) {
@@ -32,6 +32,14 @@ $.fn.clearCanvas = function(newWidth, newHeight) {
         if (newHeight) {
             height = newHeight;
         }
+
+        if (rotation) {
+            var halfWidth = width/2;
+            var halfHeight = width/2;
+            var width = (halfWidth*Math.cos(rotation*Math.PI/2) + halfHeight*Math.sin(rotation*Math.PI/2)) * 2;
+            var height = (halfHeight*Math.cos(rotation*Math.PI/2) + halfWidth*Math.sin(rotation*Math.PI/2)) * 2;
+        }
+
         this.width = width;
         this.height = height;
     })
