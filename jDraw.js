@@ -28,19 +28,39 @@ $.fn.drawRectangle = function(settings) {
         stroke: 'transparent',
         width: 10,
         height: 10,
-        position: [0,0]
+        position: [0,0],
+        rotation: 0
     }, settings);
-
-    console.log(settings.width, settings.height);
 
     this.each(function() {
         var context = this.getContext('2d');
         context.fillStyle = settings.color;
         context.strokeStyle = settings.stroke;
         context.lineWidth = settings.strokeWeight;
-        context.rect(settings.position[0], settings.position[1], settings.width, settings.height);
-        context.fill()
-        context.stroke()
+
+        var rotation = settings.rotation;
+        var halfWidth = settings.width/2;
+        var halfHeight = settings.height/2;
+        var widthA = Math.abs(halfWidth*Math.cos(-rotation*Math.PI/180) - halfHeight*Math.sin(-rotation*Math.PI/180)) * 2;
+        var widthB = Math.abs(halfWidth*Math.cos(rotation*Math.PI/180) - halfHeight*Math.sin(rotation*Math.PI/180)) * 2;
+        var width = Math.max(widthA, widthB);
+        var heightA = Math.abs(halfHeight*Math.cos(-rotation*Math.PI/180) + halfWidth*Math.sin(-rotation*Math.PI/180)) * 2;
+        var heightB = Math.abs(halfHeight*Math.cos(rotation*Math.PI/180) + halfWidth*Math.sin(rotation*Math.PI/180)) * 2;
+        var height = Math.max(heightA, heightB);
+
+        var additionX = (width - settings.width)/2;
+        var translateX = additionX + halfWidth;
+        var additionY = (height - settings.height)/2;
+        var translateY = additionY + halfHeight;
+
+        console.log(additionX, additionY, translateX, translateY);
+
+        context.translate(translateX, translateY);
+        context.rotate(settings.rotation*Math.PI/180);
+        context.rect(settings.position[0]-translateX+additionX, settings.position[1]-translateY+additionY, settings.width, settings.height);
+        context.fill();
+        context.stroke();
+        context.setTransform(1, 0, 0, 1, 0, 0);
     })
 };
 
@@ -57,9 +77,16 @@ $.fn.clearCanvas = function(newWidth, newHeight, rotation) {
 
         if (rotation) {
             var halfWidth = width/2;
-            var halfHeight = width/2;
-            var width = (halfWidth*Math.cos(rotation*Math.PI/2) + halfHeight*Math.sin(rotation*Math.PI/2)) * 2;
-            var height = (halfHeight*Math.cos(rotation*Math.PI/2) + halfWidth*Math.sin(rotation*Math.PI/2)) * 2;
+            var halfHeight = height/2;
+            var widthA = Math.abs(halfWidth*Math.cos(-rotation*Math.PI/180) - halfHeight*Math.sin(-rotation*Math.PI/180)) * 2;
+            var widthB = Math.abs(halfWidth*Math.cos(rotation*Math.PI/180) - halfHeight*Math.sin(rotation*Math.PI/180)) * 2;
+            width = Math.max(widthA, widthB);
+            var heightA = Math.abs(halfHeight*Math.cos(-rotation*Math.PI/180) + halfWidth*Math.sin(-rotation*Math.PI/180)) * 2;
+            var heightB = Math.abs(halfHeight*Math.cos(rotation*Math.PI/180) + halfWidth*Math.sin(rotation*Math.PI/180)) * 2;
+            height = Math.max(heightA, heightB);
+
+
+            console.log('height22', height);
         }
 
         this.width = width;
