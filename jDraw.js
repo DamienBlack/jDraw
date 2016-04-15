@@ -53,11 +53,9 @@ $.fn.drawRectangle = function(settings) {
         var additionY = (height - settings.height)/2;
         var translateY = additionY + halfHeight;
 
-        console.log(additionX, additionY, translateX, translateY);
-
-        context.translate(translateX, translateY);
+        context.translate(translateX+settings.position[0], translateY+settings.position[1]);
         context.rotate(settings.rotation*Math.PI/180);
-        context.rect(settings.position[0]-translateX+additionX, settings.position[1]-translateY+additionY, settings.width, settings.height);
+        context.rect(additionX-translateX, additionY-translateY, settings.width, settings.height);
         context.fill();
         context.stroke();
         context.setTransform(1, 0, 0, 1, 0, 0);
@@ -84,9 +82,6 @@ $.fn.clearCanvas = function(newWidth, newHeight, rotation) {
             var heightA = Math.abs(halfHeight*Math.cos(-rotation*Math.PI/180) + halfWidth*Math.sin(-rotation*Math.PI/180)) * 2;
             var heightB = Math.abs(halfHeight*Math.cos(rotation*Math.PI/180) + halfWidth*Math.sin(rotation*Math.PI/180)) * 2;
             height = Math.max(heightA, heightB);
-
-
-            console.log('height22', height);
         }
 
         this.width = width;
@@ -102,4 +97,4 @@ $.fn.hasPixel = function(x, y) {
     } else {
         return true;
     }
-}
+};
