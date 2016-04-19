@@ -98,3 +98,15 @@ $.fn.hasPixel = function(x, y) {
         return true;
     }
 };
+
+$.fn.rotation = function() {
+    var matrix = this.css('transform');
+    if (matrix == 'none') {
+        return 0;
+    }
+    var values = matrix.split('(')[1].split(')')[0].split(',');
+    var a = values[0];
+    var b = values[1];
+    var angle = Math.atan2(b, a) * (180/Math.PI);
+    return (angle < 0) ? angle +=360 : angle;
+};
