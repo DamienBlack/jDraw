@@ -4,23 +4,51 @@ $.fn.drawCircle = function(settings) {
         stroke: 'transparent',
         strokeWeight: 1,
         position: [0,0],
-        radius: 10
+        width: 20,
+        height: 20
     }, settings);
 
+
     this.each(function() {
+
         var context = this.getContext('2d');
         context.fillStyle = settings.color;
+
         context.strokeStyle = settings.stroke;
         context.lineWidth = settings.strokeWeight;
+
+        console.log(settings);
+
+        w = settings.width;
+        h = settings.height;
+        x = parseInt(settings.position[0]);
+        y = parseInt(settings.position[1]);
+
+        console.log(x, y, w, h);
+
+        var kappa = .5922848,
+            ox = (w / 2) * kappa, // control point offset horizontal
+            oy = (h / 2) * kappa, // control point offset vertical
+            xe = x + w,           // x-end
+            ye = y + h,           // y-end
+            xm = x + w / 2,       // x-middle
+            ym = y + h / 2;       // y-middle
+
         context.beginPath();
-        var x = parseInt(settings.radius) + parseInt(settings.position[0]);
-        var y = parseInt(settings.radius) + parseInt(settings.position[1]);
-        context.arc(x, y, settings.radius, 0, 2*Math.PI);
-        context.closePath();
+        context.moveTo(x, ym);
+        context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+        context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+        context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+        context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
         context.fill();
         context.stroke();
     });
 };
+
+function drawEllipseByCenter(ctx, cx, cy, w, h) {
+    drawEllipse(ctx, cx - w/2.0, cy - h/2.0, w, h);
+}
+
 
 $.fn.drawRectangle = function(settings) {
     settings = $.extend({
