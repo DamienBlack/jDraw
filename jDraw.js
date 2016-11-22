@@ -17,14 +17,10 @@ $.fn.drawCircle = function(settings) {
         context.strokeStyle = settings.stroke;
         context.lineWidth = settings.strokeWeight;
 
-        console.log(settings);
-
         w = settings.width;
         h = settings.height;
         x = parseInt(settings.position[0]);
         y = parseInt(settings.position[1]);
-
-        console.log(x, y, w, h);
 
         var kappa = .5922848,
             ox = (w / 2) * kappa, // control point offset horizontal
@@ -118,6 +114,9 @@ $.fn.clearCanvas = function(newWidth, newHeight, rotation) {
 };
 
 $.fn.hasPixel = function(x, y) {
+    if (!$(this[0]).is('canvas')) {
+        return true;
+    }
     var context = this[0].getContext('2d');
     var pixel = context.getImageData(x, y, 1, 1).data;
     if (pixel[3] == 0) {
