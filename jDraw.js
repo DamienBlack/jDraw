@@ -5,12 +5,13 @@ $.fn.drawCircle = function(settings) {
         strokeWeight: 1,
         position: [0,0],
         width: 20,
-        height: 20
+        height: 20,
+        startAngle: 0,
+        endAngle: 360
     }, settings);
 
 
     this.each(function() {
-
         var context = this.getContext('2d');
         context.fillStyle = settings.color;
 
@@ -30,14 +31,48 @@ $.fn.drawCircle = function(settings) {
             xm = x + w / 2,       // x-middle
             ym = y + h / 2;       // y-middle
 
+        startAngle = settings.startAngle;
+        endAngle = settings.endAngle;
+
+        max = Math.max(w, h)*5;
+        startX = Math.cos(startAngle*Math.PI/180)*max;
+        startY = Math.sin(startAngle*Math.PI/180)*max;
+        endX = Math.cos(endAngle*Math.PI/180)*max;
+        endY = Math.sin(endAngle*Math.PI/180)*max;
+
+        midAngle = (startAngle+endAngle)/3;
+        midX = Math.cos(midAngle*Math.PI/180)*max;
+        midY = Math.sin(midAngle*Math.PI/180)*max;
+
+        mid2Angle = (startAngle+endAngle)/3*2;
+        mid2X = Math.cos(mid2Angle*Math.PI/180)*max;
+        mid2Y = Math.sin(mid2Angle*Math.PI/180)*max;
+
+        context.beginPath();
+        context.moveTo(xm, ym);
+        context.lineTo(startX+xm, startY+ym);
+        context.lineTo(midX+xm, midY+ym);
+        context.lineTo(mid2X+xm, mid2Y+ym);
+        context.lineTo(endX+xm, endY+ym);
+
+        //context.fillStyle = "black";
+        context.fill();
+
+
         context.beginPath();
         context.moveTo(x, ym);
         context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
         context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
         context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
         context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+        context.globalCompositeOperation = 'source-in';
+
         context.fill();
+
+        context.globalCompositeOperation = 'source-over';
         context.stroke();
+
     });
 };
 
@@ -52,8 +87,7 @@ $.fn.drawRectangle = function(settings) {
         stroke: 'transparent',
         width: 10,
         height: 10,
-        position: [0,0],
-        rotation: 0
+        position: [0,0]
     }, settings);
 
     this.each(function() {
@@ -62,27 +96,9 @@ $.fn.drawRectangle = function(settings) {
         context.strokeStyle = settings.stroke;
         context.lineWidth = settings.strokeWeight;
 
-        var rotation = settings.rotation;
-        var halfWidth = settings.width/2;
-        var halfHeight = settings.height/2;
-        var widthA = Math.abs(halfWidth*Math.cos(-rotation*Math.PI/180) - halfHeight*Math.sin(-rotation*Math.PI/180)) * 2;
-        var widthB = Math.abs(halfWidth*Math.cos(rotation*Math.PI/180) - halfHeight*Math.sin(rotation*Math.PI/180)) * 2;
-        var width = Math.max(widthA, widthB);
-        var heightA = Math.abs(halfHeight*Math.cos(-rotation*Math.PI/180) + halfWidth*Math.sin(-rotation*Math.PI/180)) * 2;
-        var heightB = Math.abs(halfHeight*Math.cos(rotation*Math.PI/180) + halfWidth*Math.sin(rotation*Math.PI/180)) * 2;
-        var height = Math.max(heightA, heightB);
-
-        var additionX = (width - settings.width)/2;
-        var translateX = additionX + halfWidth;
-        var additionY = (height - settings.height)/2;
-        var translateY = additionY + halfHeight;
-
-        context.translate(translateX+settings.position[0], translateY+settings.position[1]);
-        context.rotate(settings.rotation*Math.PI/180);
-        context.rect(additionX-translateX, additionY-translateY, settings.width, settings.height);
+        context.rect(settings.position[0], settings.position[1], settings.width, settings.height);
         context.fill();
         context.stroke();
-        context.setTransform(1, 0, 0, 1, 0, 0);
     })
 };
 
