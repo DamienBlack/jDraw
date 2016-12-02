@@ -54,8 +54,7 @@ $.fn.drawCircle = function(settings) {
         context.lineTo(midX+xm, midY+ym);
         context.lineTo(mid2X+xm, mid2Y+ym);
         context.lineTo(endX+xm, endY+ym);
-
-        //context.fillStyle = "black";
+        
         context.fill();
 
 
